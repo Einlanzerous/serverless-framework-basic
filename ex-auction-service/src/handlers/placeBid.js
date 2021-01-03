@@ -11,9 +11,17 @@ async function placeBid(event, context) {
 
   const auction = await getAuctionById(id);
 
+  if (auction.status !== 'OPEN') {
+    throw new createError.Forbidden(
+      `Auction ${auction.title} (${auction.id}) is not OPEN, you cannot place bids on it`
+    );
+  }
+
   if (amount <= auction.highestBid.amount) {
     throw new createError.Forbidden(
-      `Bid must be higher than current highest bid ($${auction.highestBid.amount.toFixed(2)})`
+      `Bid must be higher than current highest bid ($${auction.highestBid.amount.toFixed(
+        2
+      )})`
     );
   }
 
@@ -22,9 +30,9 @@ async function placeBid(event, context) {
     Key: { id },
     UpdateExpression: 'set highestBid.amount = :amount',
     ExpressionAttributeValues: {
-      ':amount': amount,
+      ':amount': amount
     },
-    ReturnValues: 'ALL_NEW',
+    ReturnValues: 'ALL_NEW'
   };
 
   let updatedAuction;
@@ -40,7 +48,7 @@ async function placeBid(event, context) {
 
   return {
     statusCode: 200,
-    body: JSON.stringify(updatedAuction),
+    body: JSON.stringify(updatedAuction)
   };
 }
 

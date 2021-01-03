@@ -8,22 +8,25 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 async function createAuction(event, context) {
   const { title } = event.body;
   const currentTime = new Date();
+  const endDate = new Date();
+  endDate.setHours(currentTime.getHours() + 1);
 
   const auction = {
     title,
     id: uuid(),
     status: 'OPEN',
     createdAt: currentTime.toISOString(),
+    endingAt: endDate.toISOString(),
     highestBid: {
-      amount: 0,
-    },
+      amount: 0
+    }
   };
 
   try {
     await dynamodb
       .put({
         TableName: process.env.AUCTIONS_TABLE_NAME,
-        Item: auction,
+        Item: auction
       })
       .promise();
   } catch (error) {
@@ -33,7 +36,7 @@ async function createAuction(event, context) {
 
   return {
     statusCode: 201,
-    body: JSON.stringify(auction),
+    body: JSON.stringify(auction)
   };
 }
 
