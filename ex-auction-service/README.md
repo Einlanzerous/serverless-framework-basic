@@ -6,7 +6,7 @@ Normal stuff like `npm i` for the repo, but this also assums serverless and AWS-
 
 # API Information
 `POST /auction` - Expects a JSON object with `{ title: STRING }`, Will return all appropriate attributes, of note- the ID field.
-`GET /auctions` - No payload, will return all auctions.
+`GET /auctions` - No payload required, but passing along `status` as a query parameter will let you specify OPEN or CLOSED auctions, will return all applicable auctions.
 `GET /auction/{id}` - No payload, will return bid information for bid with provided id.
 `PATCH /auction/{id}/bid` - Expects a body with `{ amount: NUMBER }`. Will return the bid information as per GET auction by id above.
 
